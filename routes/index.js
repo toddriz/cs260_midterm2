@@ -20,16 +20,17 @@ router.param('candidate', (request, response, next, id) => {
 // Get Candidates
 router.get('/candidates', (request, response, next) => {
     Candidate.find((error, candidates) => {
-        if (error) { return next(error); }
-        else {
-            response.json(candidates);
+        if (error) {
+            return next(error);
+        } else {
+            return response.json(candidates);
         }
     });
 });
 
 // Add Candidate
 router.post('/candidate', (request, response, next) => {
-    const candidate = new candidate(request.body);
+    const candidate = new Candidate(request.body);
     candidate.save((error, candidate) => {
         if (error) {
             return next(error);
@@ -40,18 +41,14 @@ router.post('/candidate', (request, response, next) => {
 });
 
 // Delete Candidate
-router.delete('/candidate/:candidate', function (req, res) {
-    console.log("in Delete");
+router.delete('/candidate/:candidate', (req, res) => {
     req.candidate.remove();
     res.sendStatus(200);
-  });
-
-router.get('/candidates/:candidate', (request, response) => {
-    response.json(request.candidate);
 });
 
-router.put('/candidates/:candidate/vote', (request, response, next) => {
-    request.candidate.vote(function (error, candidate) {
+// Add vote to Candidate
+router.put('/candidate/:candidate/vote', (request, response, next) => {
+    request.candidate.vote((error, candidate) => {
         if (error) {
             return next(error);
         } else {

@@ -1,42 +1,42 @@
-angular.module('candidate', [])
-    .controller('MainCtrl', [
-        '$scope', '$http',
-        ($scope, $http) => {
-            $scope.candidates = [];
+angular.module('vote', []).controller('MainCtrl', [
+    '$scope',
+    '$http',
+    function($scope, $http) {
+        $scope.candidates = [];
+        $scope.ballot = [];
 
-            $scope.addCandidate = function() {
-                let newCandidate = { name: $scope.newCandidateName, votes: 0 };
+        $scope.getCandidates = function() {
+            return $http.get('/candidates').success(data => {
+                angular.copy(data, $scope.candidates);
+            });
+        };
+
+        $scope.getCandidates();
+
+        $scope.create = function(candidate) {};
+
+        $scope.addCandidate = function() {
+            var newCandidate = { name: $scope.newCandidateName, votes: 0 };
+            return $http.post('/candidate', newCandidate).success(data => {
+                $scope.candidates.push(data);
                 $scope.newCandidateName = '';
-                $http.post('/candidate', newCandidate).success((response) => {
-                    $scope.candidates.push(response);
-                });
-            };
+            });
+        };
 
-            $scope.addCandidate = function(candidateToDelete) {
-                
-                $http.delete('/candidate', candidateToDelete).success((response) => {
-                    $scope.candidates = $scope.candidates.filter((candidate) => {
-                        return candidate._id !== candidateToDelete._id;
-                    });
-                });
-            };
+        $scope.deleteCandidate = function(candidate) {
+            console.log('Deleting Name ' + candidate.name + ' ID ' + candidate._id);
+            $http.delete(`/candidate/${candidate._id}`).success(data => {
+                console.log('deleted ', candidate);
+                $scope.getCandidates();
+            });
+        };
 
+        $scope.voteFor = function(candidate) {
+            return $http.put(`/candidate/${candidate._id}/vote`).success(data => {
+                console.log('vote added for,', candidate);
+                candidate.votes += 1;
+            });
+        };
 
-            $scope.voteFor = function(candidate) {
-                return $http.put(`/candidate/${candidate._id}/vote`)
-                    .success((response) => {
-                        candidate.votes = response.votes;
-                    });
-            };
-
-            $scope.incrementUpvotes = function (candidate) {
-                $scope.upvote(candidate);
-            };
-
-            $scope.getAllCandidates = function() {
-                return $http.get('/candidates').success((response) => {
-                    angular.copy(response, $scope.candidates);
-                });
-            };
-        }
-    ]);
+    }
+]);
