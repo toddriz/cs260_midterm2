@@ -6,6 +6,28 @@ a {
   color: #00B7FF;
 }
 
-.candidate-form {
+.admin-form {
   margin-top: 30px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between
+}
+
+.admin-form-name {
+  max-width: 160px
+}
+
+.admin-form-price {
+  max-width: 80px
+}
+.admin-form-url {
+  max-width: 160px
+}
+
+.admin-form-button {
+  max-width: 140px  
+}
+
+.item-image {
+  max-width: 140px;
 }

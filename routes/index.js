@@ -1,60 +1,60 @@
 const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
-const Candidate = mongoose.model('Candidate');
+const Item = mongoose.model('Item');
 
-router.param('candidate', (request, response, next, id) => {
-    const query = Candidate.findById(id);
-    query.exec((error, candidate) => {
+router.param('item', (request, response, next, id) => {
+    const query = Item.findById(id);
+    query.exec((error, item) => {
         if (error) {
             return next(error);
         }
-        if (!candidate) {
-            return next(new Error("can't find candidate"));
+        if (!item) {
+            return next(new Error("can't find item"));
         }
-        request.candidate = candidate;
+        request.item = item;
         return next();
     });
 });
 
-// Get Candidates
-router.get('/candidates', (request, response, next) => {
-    Candidate.find((error, candidates) => {
+// Get items
+router.get('/items', (request, response, next) => {
+    Item.find((error, items) => {
         if (error) {
             return next(error);
         } else {
-            return response.json(candidates);
+            return response.json(items);
         }
     });
 });
 
-// Add Candidate
-router.post('/candidate', (request, response, next) => {
-    const candidate = new Candidate(request.body);
-    candidate.save((error, candidate) => {
+// Add item
+router.post('/item', (request, response, next) => {
+    const item = new Item(request.body);
+    item.save((error, item) => {
         if (error) {
             return next(error);
         } else {
-            response.json(candidate);
+            response.json(item);
         }
     });
 });
 
-// Delete Candidate
-router.delete('/candidate/:candidate', (req, res) => {
-    req.candidate.remove();
+// Delete item
+router.delete('/item/:item', (req, res) => {
+    req.item.remove();
     res.sendStatus(200);
 });
 
-// Add vote to Candidate
-router.put('/candidate/:candidate/vote', (request, response, next) => {
-    request.candidate.vote((error, candidate) => {
-        if (error) {
-            return next(error);
-        } else {
-            response.json(candidate);
-        }
+
+    router.put('/item/:item/order', (request, response, next) => {
+        request.item.incrementNumberOrdered((error, item) => {
+            if (error) {
+                return next(error);
+            } else {
+                response.json(item);
+            }
+        });
     });
-});
 
 module.exports = router;

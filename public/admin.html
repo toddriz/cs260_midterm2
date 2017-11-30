@@ -1,27 +1,31 @@
 <html>
 
 <head>
-    <title>Candidates Admin Page</title>
+    <title>Store Management Interface</title>
     <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="stylesheets/style.css" rel="stylesheet">        
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.19/angular.min.js"></script>
     <script src="javascripts/app.js"></script>
 
 </head>
 
-<body ng-app="vote" ng-controller="MainCtrl">
+<body ng-app="shop" ng-controller="MainCtrl">
     <div class="row">
         <div class="col-md-6 col-md-offset-3">
             <div class="page-header">
-                <h1>Candidates</h1>
+                <h1>Current Products</h1>
             </div>
-            <form ng-submit="addCandidate()" class="candidate-form">
-                <input type="text" ng-model="newCandidateName"></input>
-                <button type="submit">Add Candidate</button>
+            <form ng-submit="addItem()" class="admin-form">
+                <input class="admin-form-name" placeholder="Product Name" type="text" ng-model="newItemName"></input>
+                <input class="admin-form-price" placeholder="Price" type="number" ng-model="newItemPrice"></input>
+                <input class="admin-form-url" placeholder="Image URL" type="text" ng-model="newItemImageUrl"></input>                
+                <button class="admin-form-button" type="submit">Add Product</button>
             </form>
-            <div ng-repeat="candidate in candidates | orderBy: '-votes'">
-                {{candidate.name}} - votes: {{candidate.votes}}
-                <span class="glyphicon glyphicon-remove" ng-click="deleteCandidate(candidate)"></span>
-            </div>
+            <div ng-repeat="item in items | orderBy: '-name'">
+                    <span class="glyphicon glyphicon-remove" ng-click="deleteItem(item)"></span>
+                    <img class="item-image" ng-src="{{item.imageUrl}}">
+                    {{item.name}} - Price: ${{item.price}} - Ordered {{item.numberOrdered}}
+                </div>
         </div>
     </div>
 </body>

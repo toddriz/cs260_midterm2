@@ -6,8 +6,8 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 
 const mongoose = require('mongoose');
-mongoose.connect('mongodb://ec2-54-193-37-21.us-west-1.compute.amazonaws.com/candidateDB');
-require('./models/Candidate');
+mongoose.connect('mongodb://ec2-54-193-37-21.us-west-1.compute.amazonaws.com/ItemDB');
+require('./models/Item');
 
 const routes = require('./routes/index');
 const users = require('./routes/users');
